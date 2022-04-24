@@ -9,6 +9,7 @@ import android.view.accessibility.AccessibilityEvent;
 import androidx.annotation.Nullable;
 
 import org.element.gotopc.activities.BlockerActivity;
+import org.element.gotopc.utils.WifiUtils;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,20 +17,25 @@ import java.util.Set;
 public class MyAccessibilityService extends AccessibilityService {
 
     private static MyAccessibilityService myAccessibilityServiceInstance;
+    private WifiUtils wifiUtils;
 
     @Override
     protected void onServiceConnected(){
         super.onServiceConnected();
         myAccessibilityServiceInstance = this;
+        wifiUtils = new WifiUtils(this);
         setActionAppList();
     }
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
-        performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME);
-        Intent intent = new Intent(this, BlockerActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        String currentSSID = wifiUtils.getCurrentSSID();
+        Set<String> wifiList = wifiUtils.getWifiList();
+        if(wifiList.contains(currentSSID)) {
+            Intent intent = new Intent(this, BlockerActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
     }
 
     @Override
