@@ -63,6 +63,7 @@ public class ChooseAppActivity extends BaseActivity {
         MyAccessibilityService myAccessibilityService = MyAccessibilityService.getInstance();
         if(myAccessibilityService != null)
             myAccessibilityService.setActionAppList();
+        super.finish();
     }
 
     private TextView buildCenterText(String string){
