@@ -54,9 +54,9 @@ public class MyAccessibilityService extends AccessibilityService {
         return myAccessibilityServiceInstance;
     }
 
-    private void setActionAppList() {
+    public void setActionAppList() {
         Set<String> appList;
-        appList = new HashSet<>(getSharedPreferences("app_list", Activity.MODE_PRIVATE).getStringSet("default", null));
+        appList = new HashSet<>(getSharedPreferences("app_list", Activity.MODE_PRIVATE).getStringSet("default", new HashSet<>()));
         if(appList.size() == 0)
             appList.add("org.element.gotopc.never.allow");
         AccessibilityServiceInfo accessibilityServiceInfo = getServiceInfo();

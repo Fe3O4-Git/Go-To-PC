@@ -18,7 +18,7 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import org.element.gotopc.R;
-import org.element.gotopc.utils.DialogUtils;
+import org.element.gotopc.services.MyAccessibilityService;
 
 import java.util.HashSet;
 import java.util.List;
@@ -60,7 +60,9 @@ public class ChooseAppActivity extends BaseActivity {
     @Override
     public void finish() {
         saveEnabledApp();
-        DialogUtils.showAlertDialog(this, R.string.warn,R.string.restart_service_to_apply_change,((dialog, which) -> super.finish()));
+        MyAccessibilityService myAccessibilityService = MyAccessibilityService.getInstance();
+        if(myAccessibilityService != null)
+            myAccessibilityService.setActionAppList();
     }
 
     private TextView buildCenterText(String string){
