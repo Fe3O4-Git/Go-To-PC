@@ -38,15 +38,6 @@
         <activity
             android:name=".activities.BlockerActivity"
             android:exported="false" />
-        <activity
-            android:name=".activities.SettingsActivity"
-            android:exported="false"
-            android:label="@string/settings"
-            android:parentActivityName=".activities.MainActivity" />
-
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".activities.MainActivity" />
 
         <activity
             android:name=".activities.ChooseAppActivity"

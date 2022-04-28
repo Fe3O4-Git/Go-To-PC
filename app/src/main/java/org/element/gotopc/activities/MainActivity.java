@@ -31,7 +31,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         findViewById(R.id.button_main_switch).setOnClickListener(view -> serviceSwitch());
         findViewById(R.id.button_main_choose_wifi).setOnClickListener(view -> startActivity(new Intent(this, ChooseWifiActivity.class)));
         findViewById(R.id.button_main_choose_app).setOnClickListener(view -> startActivity(new Intent(this, ChooseAppActivity.class)));
-        findViewById(R.id.button_main_settings).setOnClickListener(view -> startActivity(new Intent(this,SettingsActivity.class)));
+        findViewById(R.id.button_main_settings).setOnClickListener(view -> DialogUtils.showComingsoonDialog(this));
         findViewById(R.id.button_main_help).setOnClickListener(view -> DialogUtils.showComingsoonDialog(this));
         findViewById(R.id.button_main_about).setOnClickListener(view -> aboutEgg());
         findViewById(R.id.button_main_about).setOnLongClickListener(view -> {
