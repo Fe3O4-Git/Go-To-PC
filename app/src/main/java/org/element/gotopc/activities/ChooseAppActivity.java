@@ -47,9 +47,6 @@ public class ChooseAppActivity extends BaseActivity {
     @Override
     public void finish() {
         saveCheckedApps();
-        MyAccessibilityService myAccessibilityService = MyAccessibilityService.getInstance();
-        if(myAccessibilityService != null)
-            myAccessibilityService.setActionAppList(getCheckedApps());
         super.finish();
     }
 
@@ -81,6 +78,9 @@ public class ChooseAppActivity extends BaseActivity {
         linearLayoutApp.removeAllViews();
         rootLayoutApp.addView(textView);
         appInfoUtils.replaceDataSet(checkedApps);
+        MyAccessibilityService myAccessibilityService = MyAccessibilityService.getInstance();
+        if(myAccessibilityService != null)
+            myAccessibilityService.setActionAppList(checkedApps);
     }
 
     private void refreshAppListUI(Set<AppInfoUtils.AppInfo> appInfoSet){
