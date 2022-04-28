@@ -1,11 +1,5 @@
 package org.element.gotopc.activities;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.CheckBox;
@@ -19,37 +13,30 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import org.element.gotopc.R;
 import org.element.gotopc.services.MyAccessibilityService;
+import org.element.gotopc.utils.AppInfoUtils;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 public class ChooseAppActivity extends BaseActivity {
 
     ConstraintLayout rootLayoutApp;
     LinearLayout linearLayoutApp;
-    SharedPreferences sharedPreferences;
-
-    private static class AppInfo{
-        private String name;
-        private String packageName;
-        private Drawable icon;
-    }
+    AppInfoUtils appInfoUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_app);
 
-        sharedPreferences = getSharedPreferences("app_list", Activity.MODE_PRIVATE);
         rootLayoutApp = findViewById(R.id.layout_root_app);
         linearLayoutApp = findViewById(R.id.layout_liner_app);
+        appInfoUtils = new AppInfoUtils(this);
 
         TextView textView = buildCenterText(getText(R.string.getting_app_list) + "\n" + getText(R.string.please_wait));
         rootLayoutApp.addView(textView);
         new Thread(() -> {
-            Set<AppInfo> appInfoSet = getAppList();
+            Set<AppInfoUtils.AppInfo> appInfoSet = appInfoUtils.getAppList();
             runOnUiThread(() -> {
                 rootLayoutApp.removeView(textView);
                 refreshAppListUI(appInfoSet);
@@ -59,10 +46,10 @@ public class ChooseAppActivity extends BaseActivity {
 
     @Override
     public void finish() {
-        saveEnabledApp();
+        saveCheckedApps();
         MyAccessibilityService myAccessibilityService = MyAccessibilityService.getInstance();
         if(myAccessibilityService != null)
-            myAccessibilityService.setActionAppList();
+            myAccessibilityService.setActionAppList(getCheckedApps());
         super.finish();
     }
 
@@ -75,76 +62,53 @@ public class ChooseAppActivity extends BaseActivity {
         return textView;
     }
 
-    private Set<AppInfo> getAppList(){
-        PackageManager packageManager = getPackageManager();
-        @SuppressLint("QueryPermissionsNeeded")
-        List<ApplicationInfo> installedApplications = packageManager.getInstalledApplications(0);
-        //noinspection ComparatorCombinators
-        Set<AppInfo> appInfoSet = new TreeSet<>((appInfo, appInfo1) -> appInfo.name.compareTo(appInfo1.name));
-        for(ApplicationInfo installedApplication: installedApplications){
-            if((installedApplication.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
-                AppInfo appInfo = new AppInfo();
-                appInfo.name = installedApplication.loadLabel(packageManager).toString();
-                appInfo.packageName = installedApplication.packageName;
-                appInfo.icon = installedApplication.loadIcon(packageManager);
-                appInfoSet.add(appInfo);
-            }
-        }
-        return appInfoSet;
-    }
-
-    private Set<String> getEnabledApp(){
-        HashSet<String> apps = new HashSet<>();
+    private Set<String> getCheckedApps(){
+        HashSet<String> checkedApps = new HashSet<>();
         for(int i = 0; i < linearLayoutApp.getChildCount(); i++){
             LinearLayout linearLayoutAppH = (LinearLayout) linearLayoutApp.getChildAt(i);
             CheckBox checkBox = (CheckBox) linearLayoutAppH.getChildAt(0);
             LinearLayout linearLayoutV = (LinearLayout) linearLayoutAppH.getChildAt(2);
             TextView textView = (TextView) linearLayoutV.getChildAt(1);
             if(checkBox.isChecked())
-                apps.add(textView.getText().toString());
+                checkedApps.add(textView.getText().toString());
         }
-        return apps;
+        return checkedApps;
     }
 
-    private void saveEnabledApp(){
-        Set<String> enabledApps = getEnabledApp();
+    private void saveCheckedApps(){
+        Set<String> checkedApps = getCheckedApps();
         TextView textView = buildCenterText(getText(R.string.saving_app_list) + "\n" + getText(R.string.please_wait));
         linearLayoutApp.removeAllViews();
         rootLayoutApp.addView(textView);
-        sharedPreferences.edit()
-                .putStringSet("default", enabledApps)
-                .apply();
-        rootLayoutApp.removeView(textView);
-        textView = buildCenterText(getText(R.string.really_nothing).toString());
-        rootLayoutApp.addView(textView);
+        appInfoUtils.replaceDataSet(checkedApps);
     }
 
-    private void refreshAppListUI(Set<AppInfo> appInfoSet){
-        Set<String> enabledApps = sharedPreferences.getStringSet("default",new HashSet<>());
-        for(AppInfo appInfo: appInfoSet) {
+    private void refreshAppListUI(Set<AppInfoUtils.AppInfo> appInfoSet){
+        Set<String> enabledApps = appInfoUtils.getDataSet();
+        for(AppInfoUtils.AppInfo appInfo: appInfoSet) {
             CheckBox checkBox = new CheckBox(this);
             checkBox.setChecked(enabledApps.contains(appInfo.packageName));
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.gravity = Gravity.CENTER_VERTICAL;
-            checkBox.setLayoutParams(layoutParams);
+            LinearLayout.LayoutParams layoutParams1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams1.gravity = Gravity.CENTER_VERTICAL;
+            checkBox.setLayoutParams(layoutParams1);
 
             ImageView imageView = new ImageView(this);
             imageView.setImageDrawable(appInfo.icon);
             imageView.setLayoutParams(new RelativeLayout.LayoutParams(180, 180));
 
-            TextView textView = new TextView(this);
-            textView.setText(appInfo.name);
-
             TextView textView1 = new TextView(this);
-            textView1.setText(appInfo.packageName);
+            textView1.setText(appInfo.name);
+
+            TextView textView2 = new TextView(this);
+            textView2.setText(appInfo.packageName);
 
             LinearLayout linearLayoutV = new LinearLayout(this);
             linearLayoutV.setOrientation(LinearLayout.VERTICAL);
-            LinearLayout.LayoutParams layoutParams1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams1.gravity = Gravity.CENTER_VERTICAL;
-            linearLayoutV.setLayoutParams(layoutParams1);
-            linearLayoutV.addView(textView);
+            LinearLayout.LayoutParams layoutParams2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams2.gravity = Gravity.CENTER_VERTICAL;
+            linearLayoutV.setLayoutParams(layoutParams2);
             linearLayoutV.addView(textView1);
+            linearLayoutV.addView(textView2);
 
             LinearLayout linearLayoutH = new LinearLayout(this);
             linearLayoutH.addView(checkBox);

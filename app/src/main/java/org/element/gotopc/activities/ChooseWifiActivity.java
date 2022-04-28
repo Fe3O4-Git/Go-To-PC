@@ -28,7 +28,7 @@ public class ChooseWifiActivity extends BaseActivity {
         findViewById(R.id.button_wifi_add).setOnClickListener(view -> {
             EditText editText = findViewById(R.id.edittext_wifi);
             String wifiSsid = editText.getText().toString();
-            Set<String> wifiList = wifiUtils.getWifiList();
+            Set<String> wifiList = wifiUtils.getDataSet();
             if(wifiSsid.isEmpty())
                 DialogUtils.showAlertDialog(this, R.string.error, R.string.wifi_ssid_cant_be_empty, null);
             else if(wifiList.contains(wifiSsid))
@@ -40,7 +40,7 @@ public class ChooseWifiActivity extends BaseActivity {
         });
         findViewById(R.id.button_wifi_add_current).setOnClickListener(view -> {
             String wifiSsid = wifiUtils.getCurrentSSID();
-            Set<String> wifiList = wifiUtils.getWifiList();
+            Set<String> wifiList = wifiUtils.getDataSet();
             if("<unknown ssid>".equals(wifiSsid))
                 DialogUtils.showAlertDialog(this, R.string.error, R.string.cant_get_wifi_ssid, null);
             else if(wifiList.contains(wifiSsid))
@@ -53,7 +53,7 @@ public class ChooseWifiActivity extends BaseActivity {
     }
 
     private void addWifi(String wifiSsid){
-        wifiUtils.updateWifiList(wifiSsid, WifiUtils.ADD);
+        wifiUtils.updateDataSet(wifiSsid, WifiUtils.ADD);
         appendUI(wifiSsid);
     }
 
@@ -69,7 +69,7 @@ public class ChooseWifiActivity extends BaseActivity {
         button.setOnClickListener(view -> {
             LinearLayout linearLayout = (LinearLayout) view.getParent();
             linearLayoutWifi.removeView(linearLayout);
-            wifiUtils.updateWifiList((String) textView.getText(), WifiUtils.REMOVE);
+            wifiUtils.updateDataSet((String) textView.getText(), WifiUtils.REMOVE);
         });
 
         LinearLayout linearLayout = new LinearLayout(this);
@@ -80,7 +80,7 @@ public class ChooseWifiActivity extends BaseActivity {
 
     public void refreshUI(){
         linearLayoutWifi.removeAllViews();
-        for (String wifiSsid : wifiUtils.getWifiList())
+        for (String wifiSsid : wifiUtils.getDataSet())
             appendUI(wifiSsid);
     }
 }
