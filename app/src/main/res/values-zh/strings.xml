@@ -34,4 +34,5 @@
     <string name="warn">警告</string>
     <string name="restart_service_to_apply_change">重启服务来应用更改</string>
     <string name="start_or_stop_service">启动 / 停止 服务</string>
+    <string name="show_system_apps">显示系统应用</string>
 </resources>

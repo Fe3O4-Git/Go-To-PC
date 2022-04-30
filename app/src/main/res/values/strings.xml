@@ -33,4 +33,5 @@
     <string name="warn">Warn</string>
     <string name="restart_service_to_apply_change">Restart service to apply change</string>
     <string name="start_or_stop_service">Start / stop service</string>
+    <string name="show_system_apps">Show system apps</string>
 </resources>

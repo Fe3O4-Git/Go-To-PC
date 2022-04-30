@@ -22,6 +22,7 @@ public class ChooseAppActivity extends BaseActivity {
 
     ConstraintLayout rootLayoutApp;
     LinearLayout linearLayoutApp;
+    CheckBox showSystemAppsCheckbox;
     AppInfoUtils appInfoUtils;
 
     @Override
@@ -31,17 +32,11 @@ public class ChooseAppActivity extends BaseActivity {
 
         rootLayoutApp = findViewById(R.id.layout_root_app);
         linearLayoutApp = findViewById(R.id.layout_liner_app);
+        showSystemAppsCheckbox = findViewById(R.id.show_system_apps_checkbox);
+        showSystemAppsCheckbox.setOnClickListener((view)-> refreshAppListUI());
         appInfoUtils = new AppInfoUtils(this);
 
-        TextView textView = buildCenterText(getText(R.string.getting_app_list) + "\n" + getText(R.string.please_wait));
-        rootLayoutApp.addView(textView);
-        new Thread(() -> {
-            Set<AppInfoUtils.AppInfo> appInfoSet = appInfoUtils.getAppList();
-            runOnUiThread(() -> {
-                rootLayoutApp.removeView(textView);
-                refreshAppListUI(appInfoSet);
-            });
-        }).start();
+        refreshAppListUI();
     }
 
     @Override
@@ -57,6 +52,19 @@ public class ChooseAppActivity extends BaseActivity {
         textView.setGravity(Gravity.CENTER);
         textView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
         return textView;
+    }
+
+    private void refreshAppListUI() {
+        linearLayoutApp.removeAllViews();
+        TextView textView = buildCenterText(getText(R.string.getting_app_list) + "\n" + getText(R.string.please_wait));
+        rootLayoutApp.addView(textView);
+        new Thread(() -> {
+            Set<AppInfoUtils.AppInfo> appInfoSet = appInfoUtils.getAppList(showSystemAppsCheckbox.isChecked());
+            runOnUiThread(() -> {
+                rootLayoutApp.removeView(textView);
+                refreshAppListItems(appInfoSet);
+            });
+        }).start();
     }
 
     private Set<String> getCheckedApps(){
@@ -83,7 +91,7 @@ public class ChooseAppActivity extends BaseActivity {
             myAccessibilityService.setActionAppList(checkedApps);
     }
 
-    private void refreshAppListUI(Set<AppInfoUtils.AppInfo> appInfoSet){
+    private void refreshAppListItems(Set<AppInfoUtils.AppInfo> appInfoSet){
         Set<String> enabledApps = appInfoUtils.getDataSet();
         for(AppInfoUtils.AppInfo appInfo: appInfoSet) {
             CheckBox checkBox = new CheckBox(this);
