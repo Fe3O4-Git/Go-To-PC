@@ -30,9 +30,9 @@ public class ChooseWifiActivity extends BaseActivity {
             String wifiSsid = editText.getText().toString();
             Set<String> wifiList = wifiUtils.getDataSet();
             if(wifiSsid.isEmpty())
-                DialogUtils.showAlertDialog(this, R.string.error, R.string.wifi_ssid_cant_be_empty, null);
+                DialogUtils.showOKOnlyDialog(this, R.string.error, R.string.wifi_ssid_cant_be_empty, null);
             else if(wifiList.contains(wifiSsid))
-                DialogUtils.showAlertDialog(this, R.string.error, R.string.wifi_ssid_exist, null);
+                DialogUtils.showOKOnlyDialog(this, R.string.error, R.string.wifi_ssid_exist, null);
             else {
                 addWifi(wifiSsid);
                 editText.setText(null);
@@ -42,9 +42,9 @@ public class ChooseWifiActivity extends BaseActivity {
             String wifiSsid = wifiUtils.getCurrentSSID();
             Set<String> wifiList = wifiUtils.getDataSet();
             if("<unknown ssid>".equals(wifiSsid))
-                DialogUtils.showAlertDialog(this, R.string.error, R.string.cant_get_wifi_ssid, null);
+                DialogUtils.showOKOnlyDialog(this, R.string.error, R.string.cant_get_wifi_ssid, null);
             else if(wifiList.contains(wifiSsid))
-                DialogUtils.showAlertDialog(this, R.string.error, R.string.wifi_ssid_exist, null);
+                DialogUtils.showOKOnlyDialog(this, R.string.error, R.string.wifi_ssid_exist, null);
             else
                 addWifi(wifiSsid);
         });

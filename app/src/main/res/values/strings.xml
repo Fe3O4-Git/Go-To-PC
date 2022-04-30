@@ -31,4 +31,8 @@
     <string name="accessibility_service_description">Used by Go To PC to detect and get your away from selected app(We\'ll never collect your privacy)</string>
     <string name="start_or_stop_service">Start / stop service</string>
     <string name="show_system_apps">Show system apps</string>
+    <string name="cancel">Cancel</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="question_save_app_list">Do you want to save the app list?</string>
 </resources>

@@ -68,7 +68,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) { super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE && !PermUtils.hasPerms(this)) {
-            DialogUtils.showAlertDialog(this, R.string.error, R.string.cant_work_without_perms, null);
+            DialogUtils.showWithoutPermissionDialog(this);
         }
     }
 
@@ -85,7 +85,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
     private void aboutEgg() {
         if (4 == aboutClickTimes) {
-            DialogUtils.showAlertDialog(this, R.string.info,R.string.really_nothing, null);
+            DialogUtils.showOKOnlyDialog(this, R.string.info,R.string.really_nothing, null);
             aboutClickTimes = 0;
         } else {
             aboutClickTimes++;
