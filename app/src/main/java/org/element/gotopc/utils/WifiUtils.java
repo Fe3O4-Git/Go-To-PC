@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.wifi.WifiManager;
 
 public class WifiUtils extends SharedPrefUtils {
-    WifiManager wifiManager;
+    final WifiManager wifiManager;
 
     public WifiUtils(Context context) {
         super(context, "wifi_list");

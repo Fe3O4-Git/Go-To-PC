@@ -9,8 +9,8 @@ import java.util.Set;
 
 public abstract class SharedPrefUtils {
     public static final int ADD = 1, REMOVE = 2;
-    SharedPreferences sharedPreferences;
-    SharedPreferences.Editor editor;
+    final SharedPreferences sharedPreferences;
+    final SharedPreferences.Editor editor;
 
     public SharedPrefUtils(Context context, String sharedPrefName) {
         sharedPreferences = context.getSharedPreferences(sharedPrefName, Activity.MODE_PRIVATE);
