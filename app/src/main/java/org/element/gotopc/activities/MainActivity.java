@@ -20,7 +20,6 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class MainActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks, EasyPermissions.RationaleCallbacks{
 
     public static final String LOG_TAG = "GTP";
-    int aboutClickTimes = 0;
     boolean deniedPermsReq = false;
 
     @Override
@@ -33,7 +32,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         findViewById(R.id.button_main_choose_app).setOnClickListener(view -> startActivity(new Intent(this, ChooseAppActivity.class)));
         findViewById(R.id.button_main_settings).setOnClickListener(view -> DialogUtils.showComingsoonDialog(this));
         findViewById(R.id.button_main_help).setOnClickListener(view -> DialogUtils.showComingsoonDialog(this));
-        findViewById(R.id.button_main_about).setOnClickListener(view -> aboutEgg());
+        findViewById(R.id.button_main_about).setOnClickListener(view -> DialogUtils.showComingsoonDialog(this));
         findViewById(R.id.button_main_about).setOnLongClickListener(view -> {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://mtf.wiki")));
             return true;
@@ -81,15 +80,6 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     public void onRationaleDenied(int requestCode) {
         DialogUtils.showWithoutPermissionDialog(this);
         deniedPermsReq = true;
-    }
-
-    private void aboutEgg() {
-        if (4 == aboutClickTimes) {
-            DialogUtils.showOKOnlyDialog(this, R.string.info,R.string.really_nothing, null);
-            aboutClickTimes = 0;
-        } else {
-            aboutClickTimes++;
-        }
     }
 
     private void serviceSwitch(){
