@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.13385416666666666" />
+        <entry key="app/src/main/res/layout/activity_about.xml" value="0.18840579710144928" />
         <entry key="app/src/main/res/layout/activity_blocker.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_choose_app.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_choose_wifi.xml" value="0.25" />

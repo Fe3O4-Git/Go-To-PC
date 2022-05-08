@@ -35,4 +35,5 @@
     <string name="yes">是</string>
     <string name="no">否</string>
     <string name="question_save_app_list">你要保存应用列表吗?</string>
+    <string name="thanks_to">感谢:</string>
 </resources>

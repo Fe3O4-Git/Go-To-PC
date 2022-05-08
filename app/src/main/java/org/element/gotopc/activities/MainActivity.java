@@ -32,7 +32,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         findViewById(R.id.button_main_choose_app).setOnClickListener(view -> startActivity(new Intent(this, ChooseAppActivity.class)));
         findViewById(R.id.button_main_settings).setOnClickListener(view -> DialogUtils.showComingsoonDialog(this));
         findViewById(R.id.button_main_help).setOnClickListener(view -> DialogUtils.showComingsoonDialog(this));
-        findViewById(R.id.button_main_about).setOnClickListener(view -> DialogUtils.showComingsoonDialog(this));
+        findViewById(R.id.button_main_about).setOnClickListener(view -> startActivity(new Intent(this, AboutActivity.class)));
         findViewById(R.id.button_main_about).setOnLongClickListener(view -> {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://mtf.wiki")));
             return true;
